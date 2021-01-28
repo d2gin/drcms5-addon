@@ -44,6 +44,23 @@ composer require icy8/drcms5-addon
 
 demo目录有一个简单的示例，复制至程序根目录的`./addons/`
 
+运行指令
+
+```shell
+php think draddon --addon=drmo install
+```
+
+访问 http://yourdomain/draddon/drmo/test/index
+
+出现下面文字即安装成功
+
+```
+drmo 插件示例。我是 app_begin hook， 我拦截了程序。
+欢迎来到 drmo 插件示例，你访问了drmo/controller/Test.php 0.032110s ShowPageTrace 0.034489s ShowPageTrace
+```
+
+阅读示例从Drmo.php入手，有简单注释。
+
 ### 指令
 
 为了方便测试，我特地做了一个简单的指令。
