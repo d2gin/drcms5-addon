@@ -5,6 +5,10 @@ thinkphp5.0 实现插件功能
 
 这是一个基于 thinkphp5.0实现的插件依赖，目前只支持5.0版本，切勿在5.1及以上使用。
 
+默认的插件总目录是`./addons/`，可以自行更改，但不建议更改。
+
+暂处于测试阶段，可能有比较多的地方不完善。
+
 ### 环境要求
 
 php >= 7.0
@@ -32,6 +36,10 @@ composer require icy8/drcms5-addon
 9. **插件模版：** 同上，文件放在`addons/[addon_name]/view`。
 10. **URL生成：** 用于插件访问的URL可以用函数`addon_url($url = '', $vars = '', $suffix = true, $domain = false)`生成，注意：这是只针对插件访问URL的，主程序URL请用框架自带函数。如果不喜欢用函数的可以使用`\drcms5\addon\util\AddonUrl::build()`方法生成，效果是一致的。
 
+### 插件示例
+
+demo目录有一个简单的示例，复制至程序根目录的`./addons/`
+
 ### 指令
 
 为了方便测试，我特地做了一个简单的指令。
@@ -48,3 +56,8 @@ php think draddon list
 php think draddon --addon=drmo install
 ```
 
+### 后续版本
+
+- 缓存
+- 兼容ThinkPHP 5.1
+- 计划是否兼容ThinkPHP 6.0，或者出一个单独的6.0版。
