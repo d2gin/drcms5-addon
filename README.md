@@ -56,7 +56,7 @@ php think draddon --addon=drmo install
 
 ```
 drmo 插件示例。我是 app_begin hook， 我拦截了程序。
-欢迎来到 drmo 插件示例，你访问了drmo/controller/Test.php 0.032110s ShowPageTrace 0.034489s ShowPageTrace
+欢迎来到 drmo 插件示例，你访问了drmo/controller/Test.php
 ```
 
 阅读示例从Drmo.php入手，有简单注释。
