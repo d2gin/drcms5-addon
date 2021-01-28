@@ -1,0 +1,23 @@
+<style>
+    .verify {
+        display: inline-block;
+        height: 38px;
+    }
+    .verify img {
+        display: inline-block;
+        position: relative;
+        height: 100%;
+        width: 100%;
+    }
+</style>
+<div class="layui-form-item">
+    <div class="control-wrapper">
+        <label for="verify" class="login-icon">
+            <i class="fa fa-key"></i>
+        </label>
+        <input type="text" name="verify_code" required lay-verify="required" placeholder="验证码" class="layui-input r4 width-auto inline-block"/>
+        <div class="verify">
+            <img class="point r4" title="点击刷新" onclick="this.src=this.src+'?'+Math.random()" src="{:\\Think\\Url::build('/addon/drmo/image')}" />
+        </div>
+    </div>
+</div>
