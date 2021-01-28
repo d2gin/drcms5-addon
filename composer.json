@@ -15,7 +15,7 @@
     "prefer-stable": true,
     "autoload": {
         "psr-4": {
-            "drcms5\\addon\\": "src/",
+            "drcms5\\addon\\": "src/"
         },
         "files": [
             "src/init.php",
