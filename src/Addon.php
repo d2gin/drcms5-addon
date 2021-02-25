@@ -4,7 +4,6 @@ namespace drcms5\addon;
 
 use drcms5\addon\util\Config;
 use drcms5\addon\util\DrTool;
-use think\View;
 
 abstract class Addon
 {
@@ -20,16 +19,16 @@ abstract class Addon
     {
         $view_path = $this->addon_path() . DIRECTORY_SEPARATOR;
         $thinkVer  = floatval(DrTool::ThinkVer());
-        if ($thinkVer >= 5.1) {
-            $template_conf              = Config::get('template');
-            $template_conf['view_path'] = $view_path;
-            $this->view                 = \think\Container::get('view')->engine($template_conf);
-        } else if ($thinkVer >= 6.0) {
+        if ($thinkVer >= 6.0) {
             // 待续
+        } else if ($thinkVer >= 5.1) {
+            $template_conf              = Config::get('template.');
+            $template_conf['view_path'] = $view_path;
+            $this->view                 = \think\Container::get('view')->engine($template_conf, [], true);
         } else {
             $template_conf              = Config::get('template');
             $template_conf['view_path'] = $view_path;
-            $this->view                 = new View($template_conf, Config::get('view_replace_str'));
+            $this->view                 = new \think\View($template_conf, Config::get('view_replace_str'));
         }
         // draddon是配置域
         Config::set('draddon.' . $this->getName(), [

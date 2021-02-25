@@ -18,7 +18,7 @@ class Controller extends \think\Controller
         $request                    = $this->request;
         $route_info                 = $request->routeInfo();
         $route_vars                 = $route_info['var'];
-        $template_conf              = Config::get('template');
+        $template_conf              = Config::get('template.');
         $addon_module_var           = AddonUrl::get_module_var();
         $addon_name                 = $route_vars[$addon_module_var];
         $basepath                   = Config::get('draddon.addon_path') . $addon_name;
