@@ -14,6 +14,9 @@ class Service
     {
         $list    = [];
         $path    = Config::get('draddon.addon_path');
+        if(!is_dir($path)) {
+            return $list;
+        }
         $results = scandir($path);
         foreach ($results as $name) {
             if ($name === '.' or $name === '..')

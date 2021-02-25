@@ -8,7 +8,7 @@ class DrTool
         $version = 0;
         // thinkphp 5.1 6.0
         if (class_exists('think\App') && defined('think\App::VERSION')) {
-            $version = think\App::VERSION;
+            $version = \think\App::VERSION;
             if (strpos($version, '5.1') === 0) {
                 // 5.1 支持
                 return '5.1';
@@ -56,11 +56,20 @@ class DrTool
 
     public static function rootpath()
     {
-        if (defined('ROOT_PATH') && floatval(self::ThinkVer()) < 6) {
+        if (defined('ROOT_PATH') && floatval(self::ThinkVer()) < 5.1) {
             return ROOT_PATH;
         } else if (class_exists('think\Container') && class_exists('think\App') && method_exists('think\App', 'getRootPath')) {
-            return think\Container::get('app')->getRootPath();
+            return \think\Container::get('app')->getRootPath();
         }
         return realpath(__DIR__ . DIRECTORY_SEPARATOR . '../../../../../');
+    }
+    public static function apppath()
+    {
+        if (defined('APP_PATH') && floatval(self::ThinkVer()) < 5.1) {
+            return APP_PATH;
+        } else if (class_exists('think\Container') && class_exists('think\App') && method_exists('think\App', 'getRootPath')) {
+            return \think\Container::get('app')->getAppPath();
+        }
+        return realpath(__DIR__ . DIRECTORY_SEPARATOR . '../../../../../application/');
     }
 }

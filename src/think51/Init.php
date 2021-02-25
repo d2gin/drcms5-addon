@@ -1,14 +1,14 @@
 <?php
 
-namespace drcms5\addon\think50;
+namespace drcms5\addon\think51;
 
 use drcms5\addon\Service;
 use drcms5\addon\util\AddonUrl;
 use drcms5\addon\util\DrTool;
 use drcms5\addon\util\Config;
-use think\Route;
-use think\Hook;
-use think\Console;
+use think\facade\Route;
+use think\facade\Hook;
+use think\facade\Console;
 use think\Loader;
 
 class Init
@@ -37,7 +37,7 @@ class Init
         $addon_module_var     = AddonUrl::get_module_var();
         $addon_controller_var = AddonUrl::get_controller_var();
         $addon_action_var     = AddonUrl::get_action_var();
-        Route::any(['draddon', "draddon/:{$addon_module_var}/[:{$addon_controller_var}]/[:{$addon_action_var}]"], 'drcms5\addon\think50\AddonAccess@run');
+        Route::any(['draddon', "draddon/:{$addon_module_var}/[:{$addon_controller_var}]/[:{$addon_action_var}]"], 'drcms5\addon\think51\AddonAccess@run');
         // hook
         Hook::add('app_begin', function () {
             // 加载助手函数

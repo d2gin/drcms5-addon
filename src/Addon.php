@@ -23,7 +23,7 @@ abstract class Addon
         if ($thinkVer >= 5.1) {
             $template_conf              = Config::get('template');
             $template_conf['view_path'] = $view_path;
-            $this->view                 = think\Container::get('view')->engine($template_conf);
+            $this->view                 = \think\Container::get('view')->engine($template_conf);
         } else if ($thinkVer >= 6.0) {
             // 待续
         } else {

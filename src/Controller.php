@@ -5,16 +5,17 @@ namespace drcms5\addon;
 use drcms5\addon\util\AddonUrl;
 use drcms5\addon\util\Config;
 use drcms5\addon\util\DrTool;
+use think\App;
 use think\View;
 
 class Controller extends \think\Controller
 {
-    public function __construct()
+    public function __construct(App $app = null)
     {
         if (floatval(DrTool::ThinkVer()) >= 6) {
             throw  new AddonException('thinkphp6以上版本不再需要继承 drcms5\addon\Controller');
         }
-        $request                    = $this->request;
+        $request                    = $app->request;
         $route_info                 = $request->routeInfo();
         $route_vars                 = $route_info['var'];
         $template_conf              = Config::get('template');
@@ -23,11 +24,11 @@ class Controller extends \think\Controller
         $basepath                   = Config::get('draddon.addon_path') . $addon_name;
         $template_conf['view_path'] = $basepath . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR;
         if (floatval(DrTool::ThinkVer()) == 5.1) {
-            $this->view = $this->app->view->init($template_conf);
+            $this->view = $app->view->init($template_conf);
         } else {
             $this->view = View::instance($template_conf, Config::get('view_replace_str'));
         }
-        parent::__construct($request);
+        parent::__construct($app);
     }
 
     protected function fetch($template = '', $vars = [], $replace = [], $config = [])
