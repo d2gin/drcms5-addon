@@ -2,8 +2,8 @@
 
 namespace drcms5\addon;
 
-use think\Config;
-use think\Loader;
+use drcms5\addon\util\Config;
+use drcms5\addon\util\DrTool;
 
 class Service
 {
@@ -20,10 +20,10 @@ class Service
                 continue;
             if (is_file($path . $name))
                 continue;
-            $addon_path = $path . $name . DS;
+            $addon_path = $path . $name . DIRECTORY_SEPARATOR;
             if (!is_dir($addon_path))
                 continue;
-            if (!is_file($addon_path . Loader::parseName($name, 1) . '.php'))
+            if (!is_file($addon_path . DrTool::parseName($name, 1) . '.php'))
                 continue;
             $info                                 = self::get_addon_instance($name)->getInfo();
             $list[intval($info['status'])][$name] = $info;
@@ -40,7 +40,7 @@ class Service
         if (!$name) {
             throw new AddonException('请填入插件名');
         } else if (!isset(self::$addons[$name]) || self::$addons[$name] instanceof Addon) {
-            $class = Config::get('draddon.addon_namespace') . "\\{$name}\\" . Loader::parseName($name, 1);
+            $class = Config::get('draddon.addon_namespace') . "\\{$name}\\" . DrTool::parseName($name, 1);
             if (!class_exists($class)) {
                 throw new AddonException('插件启动类不存在');
             }
@@ -53,13 +53,13 @@ class Service
     {
         $class = '';
         if ($type == 'boot') {
-            $class = Config::get('draddon.addon_namespace') . "\\{$name}\\" . Loader::parseName($name, 1);
+            $class = Config::get('draddon.addon_namespace') . "\\{$name}\\" . DrTool::parseName($name, 1);
         } else {
             // 兼容多级类目 兼容控制器.号分割
             $ex        = array_filter(explode('/', implode('/', explode('.', $name))));
             $name      = array_pop($ex);
             $basespace = implode('\\', $ex);
-            $class     = Config::get('draddon.addon_namespace') . "\\{$basespace}\\{$type}\\" . Loader::parseName($name, 1);
+            $class     = Config::get('draddon.addon_namespace') . "\\{$basespace}\\{$type}\\" . DrTool::parseName($name, 1);
         }
         return $class;
     }
@@ -83,10 +83,10 @@ class Service
     {
         $list      = [];
         $path      = Config::get('draddon.addon_path');
-        $addon_dir = $path . $name . DS;
+        $addon_dir = $path . $name . DIRECTORY_SEPARATOR;
         // 扫描插件目录是否有覆盖的文件
         foreach (self::get_mainapp_dir() as $dir => $dst) {
-            $mainapp_dir = ROOT_PATH . DS . $dir . DS;
+            $mainapp_dir = DrTool::rootpath() . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR;
             if (!is_dir($mainapp_dir))
                 continue;
             //检测到存在插件外目录
@@ -100,14 +100,14 @@ class Service
                     if ($fileinfo->isFile()) {
                         $filePath = $fileinfo->getPathName();
                         if ($only_conflict) {
-                            $destPath = preg_replace('!^' . preg_quote($addon_dir . $dir . DS) . '!', $dst, $filePath);
+                            $destPath = preg_replace('!^' . preg_quote($addon_dir . $dir . DIRECTORY_SEPARATOR) . '!', $dst, $filePath);
                             if (is_file($destPath)) {
                                 if (filesize($filePath) != filesize($destPath) || md5_file($filePath) != md5_file($destPath)) {
                                     $list[] = $destPath;
                                 }
                             }
                         } else {
-                            $destPath = preg_replace('!^' . preg_quote($addon_dir . DS . $dir) . '!', $dst, $filePath);
+                            $destPath = preg_replace('!^' . preg_quote($addon_dir . DIRECTORY_SEPARATOR . $dir) . '!', $dst, $filePath);
                             $list[]   = $destPath;
                         }
                     }
@@ -144,12 +144,12 @@ class Service
                 new \RecursiveDirectoryIterator($src, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $item
         ) {
             if ($item->isDir()) {
-                $sontDir = $dest . DS . $iterator->getSubPathName();
+                $sontDir = $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName();
                 if (!is_dir($sontDir)) {
                     mkdir($sontDir, 0755, true);
                 }
             } else {
-                copy($item, $dest . DS . $iterator->getSubPathName());
+                copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
             }
         }
     }
@@ -180,7 +180,7 @@ class Service
      */
     protected static function get_source_assets_dir($name)
     {
-        return Config::get('draddon.addon_path') . $name . DS . 'assets' . DS;
+        return Config::get('draddon.addon_path') . $name . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -190,7 +190,7 @@ class Service
      */
     protected static function get_dest_assets_dir($name)
     {
-        $assetsDir = ROOT_PATH . str_replace("/", DS, "public/assets/addons/{$name}/");
+        $assetsDir = DrTool::rootpath() . str_replace("/", DIRECTORY_SEPARATOR, "public/assets/addons/{$name}/");
         if (!is_dir($assetsDir)) {
             mkdir($assetsDir, 0755, true);
         }
@@ -220,7 +220,7 @@ class Service
         $mainapp_dirs = self::get_mainapp_dir();
         var_dump($mainapp_dirs);
         foreach ($mainapp_dirs as $src => $dest) {
-            $srcDir = $addon_dir . $name . DS . $src;
+            $srcDir = $addon_dir . $name . DIRECTORY_SEPARATOR . $src;
             if (is_dir($srcDir)) {
                 self::copy_dir($srcDir, $dest);
             }
@@ -244,7 +244,7 @@ class Service
         }
         if ($force) {
             foreach ($mainapp_files as $file) {
-                @unlink(ROOT_PATH . $file);
+                @unlink(DrTool::rootpath() . $file);
             }
         }
         // 移除插件目录

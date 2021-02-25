@@ -1,6 +1,6 @@
 <?php
 
-namespace drcms5\addon;
+namespace drcms5\addon\think50;
 
 use think\App;
 use think\Config;
@@ -10,6 +10,7 @@ use think\Loader;
 use think\Request;
 use think\Response;
 use drcms5\addon\util\AddonUrl;
+use drcms5\addon\Service;
 
 class AddonAccess
 {

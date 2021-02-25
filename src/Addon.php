@@ -2,8 +2,8 @@
 
 namespace drcms5\addon;
 
-use think\Config;
-use think\Lang;
+use drcms5\addon\util\Config;
+use drcms5\addon\util\DrTool;
 use think\View;
 
 abstract class Addon
@@ -18,9 +18,19 @@ abstract class Addon
     // 尽量不要在构造方法中写过多的逻辑代码
     public function __construct()
     {
-        $template_conf              = Config::get('template');
-        $template_conf['view_path'] = $this->addon_path() . DS;
-        $this->view                 = new View($template_conf, Config::get('view_replace_str'));
+        $view_path = $this->addon_path() . DIRECTORY_SEPARATOR;
+        $thinkVer  = floatval(DrTool::ThinkVer());
+        if ($thinkVer >= 5.1) {
+            $template_conf              = Config::get('template');
+            $template_conf['view_path'] = $view_path;
+            $this->view                 = think\Container::get('view')->engine($template_conf);
+        } else if ($thinkVer >= 6.0) {
+            // 待续
+        } else {
+            $template_conf              = Config::get('template');
+            $template_conf['view_path'] = $view_path;
+            $this->view                 = new View($template_conf, Config::get('view_replace_str'));
+        }
         // draddon是配置域
         Config::set('draddon.' . $this->getName(), [
             'config' => $this->getConfig(),
@@ -43,7 +53,7 @@ abstract class Addon
     final public function is_intact()
     {
         $addon_path = $this->addon_path();
-        if(!is_dir($addon_path)) {
+        if (!is_dir($addon_path)) {
             throw new AddonException('插件目录不存在');
         }
         $info_field = ['name', 'title', 'intro', 'author', 'version', 'status'];
@@ -51,7 +61,7 @@ abstract class Addon
         $is_intact  = true;
         if (array_intersect($info_field, array_keys($addon_info)) != $info_field) {
             $is_intact = false;
-        }/* else if (is_file($this->addon_path() . DS . 'config.php')) {
+        }/* else if (is_file($this->addon_path() . DIRECTORY_SEPARATOR . 'config.php')) {
             $is_intact = false;
         }*/
         if (!$is_intact) throw new AddonException('插件信息不全' . static::class);
@@ -60,7 +70,7 @@ abstract class Addon
 
     final public function getConfig($key = '')
     {
-        $config_file = $this->addon_path() . DS . 'config.php';
+        $config_file = $this->addon_path() . DIRECTORY_SEPARATOR . 'config.php';
         if (!self::$config && is_file($config_file)) {
             self::$config = include $config_file;
         }
@@ -81,7 +91,7 @@ abstract class Addon
             return self::$addon_info;
         }
         $dir  = $this->addon_path();
-        $file = rtrim($dir, DS) . DS . 'info.php';
+        $file = rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'info.php';
         if (!is_file($file)) throw  new AddonException('插件信息缺失：' . $file);
         self::$addon_info                = include $file;
         self::$addon_info['update_time'] = filemtime($file);
@@ -97,9 +107,12 @@ abstract class Addon
         if (!strstr($class, $namespace . '\\')) {
             throw new AddonException(sprintf('非法的插件命名空间 %s', $class));
         }
-        $suffix           = str_replace($namespace, '', $class);
-        self::$addon_path = str_replace('\\', DS, $suffix);
-        self::$addon_path = rtrim($baseDir, DS) . DS . ltrim(self::$addon_path, DS) . EXT;
+        $suffix = str_replace($namespace, '', $class);
+        if (!defined('EXT')) {
+            define('EXT', '.php');
+        }
+        self::$addon_path = str_replace('\\', DIRECTORY_SEPARATOR, $suffix);
+        self::$addon_path = rtrim($baseDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim(self::$addon_path, DIRECTORY_SEPARATOR) . EXT;
         self::$addon_path = dirname(self::$addon_path);
         return self::$addon_path;
         throw new AddonException(sprintf('非法的插件路径 %s', $class));
@@ -118,7 +131,7 @@ abstract class Addon
 
     public function setInfo($info)
     {
-        $file = rtrim($this->addon_path(), DS) . DS . 'info.php';
+        $file = rtrim($this->addon_path(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'info.php';
         return file_put_contents($file, '<?php return ' . var_export($info, true) . ';');
     }
 
