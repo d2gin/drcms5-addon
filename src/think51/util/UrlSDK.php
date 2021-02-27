@@ -24,9 +24,9 @@ class UrlSDK extends Url
 //            $url = 'draddon/' . $url;
 //        }
         $ex = array_filter(explode('/', $url));
-        if (count($ex) < 3) {
+        /*if (count($ex) < 3) {
             array_shift($ex);
-        } else if (count($ex) < 2) {
+        } else */if (count($ex) < 2) {
             return parent::build($url, $var, $suffix, $domain);
         }
         $arg = [
