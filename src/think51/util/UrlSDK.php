@@ -1,8 +1,12 @@
 <?php
+
 namespace drcms5\addon\think51\util;
+
+use drcms5\addon\util\AddonUrl;
 use think\facade\Url;
 
-class UrlSDK extends Url {
+class UrlSDK extends Url
+{
 
     /**
      * 生成插件访问地址
@@ -26,9 +30,9 @@ class UrlSDK extends Url {
             return parent::build($url, $var, $suffix, $domain);
         }
         $arg = [
-            self::get_module_var()     => array_shift($ex),
-            self::get_controller_var() => array_shift($ex),
-            self::get_action_var()     => array_shift($ex),
+            AddonUrl::get_module_var()     => array_shift($ex),
+            AddonUrl::get_controller_var() => array_shift($ex),
+            AddonUrl::get_action_var()     => array_shift($ex),
         ];
         if (is_string($var)) parse_str($var, $var);
         $var = array_merge($var, $arg);
