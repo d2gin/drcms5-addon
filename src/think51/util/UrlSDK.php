@@ -20,9 +20,9 @@ class UrlSDK extends Url
     public static function build($url = '', $var = '', $suffix = true, $domain = false)
     {
         $url = trim($url, '/');
-        if (!preg_match('/^draddon\//i', $url)) {
-            $url = 'draddon/' . $url;
-        }
+//        if (!preg_match('/^draddon\//i', $url)) {
+//            $url = 'draddon/' . $url;
+//        }
         $ex = array_filter(explode('/', $url));
         if (count($ex) < 3) {
             array_shift($ex);
