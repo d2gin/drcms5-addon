@@ -33,7 +33,7 @@ class Service
         }
         krsort($list);
         if (in_array($status, ['0', '1'])) {
-            return $list[$status];
+            return $list[$status]??[];
         }
         return $list;
     }
