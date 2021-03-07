@@ -12,12 +12,12 @@ trait Kernel
             throw new AddonException('请填入插件名');
         }
         $action = $this->input->getArgument('action');
-        $force  = $this->input->getArgument('force');
+        $force  = $this->input->getOption('force');
         $queue  = explode('-', $action);
         foreach (['install', 'uninstall', 'enable', 'disable'] as $act) {
             if (in_array($act, $queue)) {
                 $this->output->writeln($addon_name . ' ' . $act . ' running');
-                $return = Service::$act($addon_name, );
+                $return = Service::$act($addon_name);
                 if (is_countable($return)) {
                     $this->output->writeln(json_encode($return, JSON_UNESCAPED_UNICODE));
                 } else if (is_string($return)) {
